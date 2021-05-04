@@ -1,38 +1,73 @@
-.App {
-  text-align: center;
+.app-wrapper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 4rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+p { margin-bottom: 3rem; }
+dl {
+  margin-top: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+dl dt {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 800;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+dl dd {
+  margin: 0;
+}
+
+dd + dt {
+  margin-top: 1.5rem;
+}
+
+button {
+  background-color: white;
+  border: #e3e3e3 1px solid;
+  border-radius: 4px; 
+  color: black;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0.75rem 2rem;
+  transition: opacity 0.25s ease-out, background-color 0.25s ease-out;
+  margin-bottom: 1rem;
+}
+
+button + button {
+  margin-left: 1rem;
+}
+
+button:hover {
+  opacity: 0.8;
+  background-color: #e3e3e3;
+}
+
+button.water {
+  color: #4cb5f4;
+}
+
+button.compost {
+  color: #5b4741;
+}
+
+button.health {
+  background-color: #609159;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+label {
+  display: block;
+  font-weight: 800;
+  font-size: 0.8rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.input-output {
+  display: flex;
+}
+
+.inputs, .outputs {
+  padding-right: 2rem;
 }
