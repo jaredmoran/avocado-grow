@@ -7,6 +7,7 @@ const initState = {
   waterAmt: 0,
   compostAmt: 0,
   sunAmt: 0,
+  windAmt: 0,
   health: 0,
   showDiagnosis: false,
   diagnosis: '',
@@ -20,6 +21,12 @@ const avoReducer = (avoState, action) => {
       return { ...avoState, compostAmt: avoState.compostAmt + 1 };
     case 'sun':
       return { ...avoState, sunAmt: action.value };
+    case 'wind':
+      return {
+        ...avoState,
+        windAmt: avoState.windAmt + 1,
+        waterAmt: avoState.waterAmt - avoState.windAmt,
+      };
     case 'reset':
       return { ...initState };
     case 'health':
@@ -60,7 +67,7 @@ function App() {
       }
       dispatch({
         type: 'diagnosis',
-        value: diagnosis
+        value: diagnosis,
       });
     }
   }, [avoState.health]);
@@ -68,7 +75,11 @@ function App() {
   return (
     <div className='app-wrapper'>
       <h1>Avocado Doctor</h1>
-      <p>Tell the doctor how much water, compost and sunshine your avocado has been getting, and the doctor will tell you if your avocado is happy or not.</p>
+      <p>
+        Tell the doctor how much water, compost and sunshine your avocado has
+        been getting, and the doctor will tell you if your avocado is happy or
+        not.
+      </p>
       <div className='input-output'>
         <div className='inputs'>
           <button className='water' onClick={() => dispatch({ type: 'water' })}>
@@ -93,6 +104,10 @@ function App() {
             }}
             step='1'
           />
+          <br />
+          <button className='wind' onClick={() => dispatch({ type: 'wind' })}>
+            Wind
+          </button>
         </div>
         <div className='outputs'>
           <dl>
@@ -102,6 +117,8 @@ function App() {
             <dd>{avoState.compostAmt}</dd>
             <dt>Sunshine</dt>
             <dd>{avoState.sunAmt}%</dd>
+            <dt>Wind</dt>
+            <dd>{avoState.windAmt}</dd>
           </dl>
           <button className='health' onClick={calculateHealth}>
             Get a Check-Up
@@ -109,6 +126,10 @@ function App() {
           <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>
         </div>
         <div className='health'>
+          <dl>
+            <dt>Health</dt>
+            <dd>{avoState.health}</dd>
+          </dl>
           {avoState.showDiagnosis ? (
             <dl>
               <dt>Diagnosis</dt>

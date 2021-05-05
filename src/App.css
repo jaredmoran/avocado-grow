@@ -53,6 +53,10 @@ button.compost {
   color: #5b4741;
 }
 
+button.wind {
+  color: #6f1b72;
+}
+
 button.health {
   background-color: #609159;
   color: white;
