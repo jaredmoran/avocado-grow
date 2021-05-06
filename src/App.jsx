@@ -1,8 +1,9 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import './App.css';
 
 const MULTIPLIER_WATER = 10;
 const MULTIPLIER_COMPOST = 5;
+const TIMER_INTERVAL = 5;
 const initState = {
   waterAmt: 0,
   compostAmt: 0,
@@ -15,17 +16,21 @@ const initState = {
 
 const avoReducer = (avoState, action) => {
   switch (action.type) {
-    case 'water':
+    case 'add_water':
       return { ...avoState, waterAmt: avoState.waterAmt + 1 };
-    case 'compost':
+    case 'remove_water':
+      return { ...avoState, waterAmt: avoState.waterAmt - 1 };
+    case 'add_compost':
       return { ...avoState, compostAmt: avoState.compostAmt + 1 };
+    case 'remove_compost':
+      return { ...avoState, compostAmt: avoState.compostAmt - 1 };
     case 'sun':
       return { ...avoState, sunAmt: action.value };
     case 'wind':
       return {
         ...avoState,
         windAmt: avoState.windAmt + 1,
-        waterAmt: avoState.waterAmt - avoState.windAmt,
+        waterAmt: avoState.waterAmt - 1,
       };
     case 'reset':
       return { ...initState };
@@ -40,6 +45,7 @@ const avoReducer = (avoState, action) => {
 
 function App() {
   const [avoState, dispatch] = useReducer(avoReducer, initState);
+  const [time, setTime] = useState(TIMER_INTERVAL);
 
   // For the sake of this exercise, let's say we want a 1:1 ratio
   // of water and compost to sunshine.
@@ -72,6 +78,28 @@ function App() {
     }
   }, [avoState.health]);
 
+  useEffect(() => {
+    calculateHealth();
+  }, [avoState.waterAmt, avoState.compostAmt, avoState.sunAmt, avoState.windAmt]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const currentTime = time;
+      if (currentTime > 0) {
+        setTime(currentTime - 1);
+      } else {
+        setTime(TIMER_INTERVAL)
+      }
+    }, 1000);
+  });
+
+  useEffect(() => {
+    if (time === 0) {
+      dispatch({type: 'remove_water'});
+      dispatch({type: 'remove_compost'});
+    }
+  }, [time]);
+
   return (
     <div className='app-wrapper'>
       <h1>Avocado Doctor</h1>
@@ -82,13 +110,14 @@ function App() {
       </p>
       <div className='input-output'>
         <div className='inputs'>
-          <button className='water' onClick={() => dispatch({ type: 'water' })}>
+          <p>Time: {time}</p>
+          <button className='water' onClick={() => dispatch({ type: 'add_water' })}>
             Add Water
           </button>
           <br />
           <button
             className='compost'
-            onClick={() => dispatch({ type: 'compost' })}
+            onClick={() => dispatch({ type: 'add_compost' })}
           >
             Add Compost
           </button>
@@ -120,9 +149,6 @@ function App() {
             <dt>Wind</dt>
             <dd>{avoState.windAmt}</dd>
           </dl>
-          <button className='health' onClick={calculateHealth}>
-            Get a Check-Up
-          </button>
           <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>
         </div>
         <div className='health'>
